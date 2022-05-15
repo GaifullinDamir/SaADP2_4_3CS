@@ -23,9 +23,11 @@ namespace SaADP2_4_3CS
         private static int amount = 0;
 
         static void Main(string[] args)
+        
         {
             string[] keys = { "Алексей", "Константин", "Евгений", "Ислам", "Данис", "Павел", "Егор", "Кирилл" };
             Array[] hashTable = new Array[m];
+            Interface(hashTable, keys);
         }
 
         public static int Hash(string key)
@@ -39,6 +41,7 @@ namespace SaADP2_4_3CS
         }
         public static void Add(Array[] hashTable, int hash, string key, ref int compares)
         {
+            Console.Write($"Ключ - {key}, хеш - {hash}   ");
             compares++;
             if(hashTable[hash] == null)
             {
@@ -46,9 +49,15 @@ namespace SaADP2_4_3CS
                 cell.Key = key;
                 cell.Begin = cell.End = null;
                 hashTable[hash] = cell;
+                amount++;
+                return;
             }
             compares++;
-            if(hashTable[hash].Key == key) { return; }
+            if(hashTable[hash].Key == key) 
+            {
+                Console.WriteLine("Такой ключ уже есть.");
+                return; 
+            }
             else
             {
                 Node item = new Node();
@@ -61,10 +70,22 @@ namespace SaADP2_4_3CS
                 }
                 else
                 {
-                    hashTable[hash].Begin.Next = item;
+                    Node pCurrent = hashTable[hash].Begin;
+                    while(pCurrent != null)
+                    {
+                        if (pCurrent.Key == key)
+                        {
+                            Console.WriteLine("Такой ключ уже есть.");
+                            return;
+                        }
+                        pCurrent = pCurrent.Next;
+                    }
+                    hashTable[hash].End.Next = item;
                     hashTable[hash].End = item;
                 }
+                amount++;
             }
+            
         }
 
         public static int Search(Array[] hashTable, int hash, string key, ref int compares)
@@ -92,6 +113,11 @@ namespace SaADP2_4_3CS
         public static bool Delete(Array[] hashTable, int hash, string key, ref int compares)
         {
             compares++;
+            if(hashTable[hash] == null)
+            {
+                return false;
+            }
+            Node pTemp;
             if(hashTable[hash].Key == key)
             {
                 compares++;
@@ -102,7 +128,7 @@ namespace SaADP2_4_3CS
                 }
                 else
                 {
-                    Node pTemp = hashTable[hash].Begin;
+                    pTemp = hashTable[hash].Begin;
                     hashTable[hash].Key = pTemp.Key;
                     hashTable[hash].Begin = pTemp.Next;
                     pTemp.Key = null;
@@ -110,24 +136,35 @@ namespace SaADP2_4_3CS
                 }
                 return true;
             }
-            else
+           
+            if (hashTable[hash].Begin.Key == key)
             {
-                Node pCurrent = hashTable[hash].Begin;
-                Node pPrev = pCurrent;
-                while (pCurrent != null)
-                {
-                    if(pCurrent.Key == key)
-                    {
-                        pPrev.Next = pCurrent.Next;
-                        pCurrent.Key = null;
-                        pCurrent.Next = null;
-                        return true;
-                    }
-                    pPrev = pCurrent;
-                    pCurrent = pCurrent.Next;
-                }
-                return false;
+                pTemp = hashTable[hash].Begin;
+                hashTable[hash].Begin = hashTable[hash].Begin.Next;
+                pTemp.Key = null;
+                pTemp.Next = null;
+                pTemp = null;
+                return true;
             }
+            Node pCurrent = hashTable[hash].Begin;
+            Node pPrev = pCurrent;
+            while (pCurrent != null)
+            {
+                if (pCurrent.Key == key)
+                {
+                    pPrev.Next = pCurrent.Next;
+                    pTemp = pCurrent;
+                    pTemp.Key = null;
+                    pTemp = null;
+                    return true;
+                }
+                pPrev = pCurrent;
+                pCurrent = pCurrent.Next;
+            }
+            return false;
+
+
+
         }
 
         public static void Print(Array[] hashTable)
@@ -139,11 +176,11 @@ namespace SaADP2_4_3CS
                 {
                     if (hashTable[i] != null)
                     {
-                        Console.Write($" | {i} - {hashTable[i].Key}");
+                        Console.WriteLine($" столб {i}  - {hashTable[i].Key}");
                         pCurrent = hashTable[i].Begin;
                         while (pCurrent != null)
                         {
-                            Console.Write($" | {i} - {pCurrent.Key}");
+                            Console.WriteLine($" столб {i} - {pCurrent.Key}");
                             pCurrent = pCurrent.Next;
                         }
                     }
@@ -245,6 +282,7 @@ namespace SaADP2_4_3CS
             keys = null;
             for (int i = 0; i < m; i++)
             {
+                if(hashTable[i] == null) { return; }
                 Node pCurrent = hashTable[i].Begin;
                 Node pTemp;
                 while(pCurrent != null)
