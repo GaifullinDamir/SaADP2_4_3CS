@@ -18,15 +18,15 @@ namespace SaADP2_4_3CS
     class Program
     {
 
-        private const int m = 10;  //Размер массива
-        private const int n = 2 * m; //Допустимое количесвто элементов хеш таблицы
-        private static int amount = 0;
+        private const int _m = 10;  //Размер массива
+        private const int _n = 2 * _m; //Допустимое количесвто элементов хеш таблицы
+        private static int _amount = 0;
 
         static void Main(string[] args)
         
         {
             string[] keys = { "Алексей", "Константин", "Евгений", "Ислам", "Данис", "Павел", "Егор", "Кирилл" };
-            Array[] hashTable = new Array[m];
+            Array[] hashTable = new Array[_m];
             Interface(hashTable, keys);
         }
 
@@ -37,11 +37,10 @@ namespace SaADP2_4_3CS
             {
                 code += (int)key[i];
             }
-            return code % m;
+            return code % _m;
         }
         public static void Add(Array[] hashTable, int hash, string key, ref int compares)
         {
-            Console.Write($"Ключ - {key}, хеш - {hash}   ");
             compares++;
             if(hashTable[hash] == null)
             {
@@ -49,7 +48,7 @@ namespace SaADP2_4_3CS
                 cell.Key = key;
                 cell.Begin = cell.End = null;
                 hashTable[hash] = cell;
-                amount++;
+                _amount++;
                 return;
             }
             compares++;
@@ -83,7 +82,7 @@ namespace SaADP2_4_3CS
                     hashTable[hash].End.Next = item;
                     hashTable[hash].End = item;
                 }
-                amount++;
+                _amount++;
             }
             
         }
@@ -162,27 +161,25 @@ namespace SaADP2_4_3CS
                 pCurrent = pCurrent.Next;
             }
             return false;
-
-
-
         }
 
         public static void Print(Array[] hashTable)
         {
             Node pCurrent;
-            if(amount != 0)
+            if(_amount != 0)
             {
-                for (int i = 0; i < m; i++)
+                for (int i = 0; i < _m; i++)
                 {
                     if (hashTable[i] != null)
                     {
-                        Console.WriteLine($" столб {i}  - {hashTable[i].Key}");
+                        Console.Write($"\n {i}  - {hashTable[i].Key}");
                         pCurrent = hashTable[i].Begin;
                         while (pCurrent != null)
                         {
-                            Console.WriteLine($" столб {i} - {pCurrent.Key}");
+                            Console.Write($" , {pCurrent.Key}");
                             pCurrent = pCurrent.Next;
                         }
+                        Console.WriteLine();
                     }
                 }
             }
@@ -228,7 +225,7 @@ namespace SaADP2_4_3CS
         }
         public static void CaseAdd(Array[] hashTable)
         {
-            if (amount != n)
+            if (_amount != _n)
             {
                 int compares = 0;
                 Console.Write("введите ключ: "); string key = Console.ReadLine();
@@ -259,7 +256,7 @@ namespace SaADP2_4_3CS
 
         public static void CaseSearch(Array[] hashTable)
         {
-            if(!(amount == 0))
+            if(!(_amount == 0))
             {
                 int compares = 0;
                 Console.Write("Введите ключ для поиска: "); string key = Console.ReadLine();
@@ -280,7 +277,7 @@ namespace SaADP2_4_3CS
                 keys[i] = null;
             }
             keys = null;
-            for (int i = 0; i < m; i++)
+            for (int i = 0; i < _m; i++)
             {
                 if(hashTable[i] == null) { return; }
                 Node pCurrent = hashTable[i].Begin;
@@ -343,6 +340,7 @@ namespace SaADP2_4_3CS
                         Console.WriteLine("Такого пункта меню нет.");
                         break;
                 }
+                Console.WriteLine("0. Меню.");
             }
         }
     }
