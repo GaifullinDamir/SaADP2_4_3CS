@@ -19,7 +19,7 @@ namespace SaADP2_4_3CS
     {
 
         private const int _m = 10;  //Размер массива
-        private const int _n = 2 * _m; //Допустимое количесвто элементов хеш таблицы
+        private const int _n = 2 * _m; //Допустимое количество элементов хеш таблицы
         private static int _amount = 0;
 
         static void Main(string[] args)
@@ -84,7 +84,6 @@ namespace SaADP2_4_3CS
                 }
                 _amount++;
             }
-            
         }
 
         public static int Search(Array[] hashTable, int hash, string key, ref int compares)
@@ -135,15 +134,18 @@ namespace SaADP2_4_3CS
                 }
                 return true;
             }
-           
-            if (hashTable[hash].Begin.Key == key)
+
+            if (hashTable[hash].Begin != null) 
             {
-                pTemp = hashTable[hash].Begin;
-                hashTable[hash].Begin = hashTable[hash].Begin.Next;
-                pTemp.Key = null;
-                pTemp.Next = null;
-                pTemp = null;
-                return true;
+                if (hashTable[hash].Begin.Key == key)
+                {
+                    pTemp = hashTable[hash].Begin;
+                    hashTable[hash].Begin = hashTable[hash].Begin.Next;
+                    pTemp.Key = null;
+                    pTemp.Next = null;
+                    pTemp = null;
+                    return true;
+                }
             }
             Node pCurrent = hashTable[hash].Begin;
             Node pPrev = pCurrent;
@@ -228,7 +230,7 @@ namespace SaADP2_4_3CS
             if (_amount != _n)
             {
                 int compares = 0;
-                Console.Write("введите ключ: "); string key = Console.ReadLine();
+                Console.Write("Введите ключ: "); string key = Console.ReadLine();
                 int hash = Hash(key);
                 Add(hashTable, hash, key, ref compares);
                 Console.WriteLine($"Количество сравнений: {compares}");
@@ -246,7 +248,7 @@ namespace SaADP2_4_3CS
             bool check = Delete(hashTable, hash, removeable, ref compares);
             if (check)
             {
-                Console.WriteLine($"Элемент был удален. КОличесвто сравнений: {compares}");
+                Console.WriteLine($"Элемент был удален. Количество сравнений: {compares}");
             }
             else
             {
